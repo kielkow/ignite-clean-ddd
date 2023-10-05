@@ -5,14 +5,14 @@ test('create an answer', async () => {
     const answerQuestion = new AnswerQuestionUseCase()
 
     const answer = await answerQuestion.execute({
-        instructorId: '1',
+        authorId: '1',
         questionId: '1',
         content: 'This is the answer'
     })
 
     expect(answer).toEqual({
         id: answer.id,
-        instructorId: '1',
+        authorId: '1',
         questionId: '1',
         content: 'This is the answer'
     })
