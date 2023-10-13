@@ -1,7 +1,10 @@
-export class Slug {
+import { Entity } from '@/core/entities/entity'
+
+export class Slug extends Entity {
 	public value: string
 
 	constructor(value: string) {
+		super()
 		this.value = value
 	}
 

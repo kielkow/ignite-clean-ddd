@@ -1,13 +1,22 @@
 import { randomUUID } from 'crypto'
 
-export class Student {
+import { Entity } from '@/core/entities/entity'
+
+interface StudentProps {
+	name: string
+	email: string
+}
+
+export class Student extends Entity {
 	public id: string
 	public name: string
 	public email: string
 
-	constructor(name: string, email: string, id?: string) {
-		this.name = name
-		this.email = email
+	constructor(props: StudentProps, id?: string) {
+		super()
+
+		this.name = props.name
+		this.email = props.email
 
 		this.id = id || randomUUID()
 	}

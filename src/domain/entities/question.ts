@@ -1,5 +1,7 @@
 import { randomUUID } from 'crypto'
 
+import { Entity } from '@/core/entities/entity'
+
 import { Slug } from './value-objects/slug'
 
 interface QuestionProps {
@@ -8,7 +10,8 @@ interface QuestionProps {
 	content: string
 	authorId: string
 }
-export class Question {
+
+export class Question extends Entity {
 	public id: string
 	public title: string
 	public slug: Slug
@@ -18,6 +21,8 @@ export class Question {
 	public authorId: string
 
 	constructor(props: QuestionProps, id?: string) {
+		super()
+
 		this.title = props.title
 		this.slug = props.slug
 		this.content = props.content
