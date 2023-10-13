@@ -17,9 +17,11 @@ test('create an answer', async () => {
 	})
 
 	expect(answer).toEqual({
-		id: answer.id,
-		authorId: '1',
-		questionId: '1',
-		content: 'This is the answer',
+		_id: answer.id,
+		_props: {
+			authorId: '1',
+			questionId: '1',
+			content: 'This is the answer',
+		},
 	})
 })
