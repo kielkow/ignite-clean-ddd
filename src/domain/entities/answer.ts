@@ -7,4 +7,9 @@ interface AnswerProps {
 	authorId: UniqueEntityID
 }
 
-export class Answer extends Entity<AnswerProps> {}
+export class Answer extends Entity<AnswerProps> {
+	static create(props: AnswerProps, id?: UniqueEntityID) {
+		const answer = new Answer(props, id)
+		return answer
+	}
+}

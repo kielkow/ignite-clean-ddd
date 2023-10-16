@@ -22,8 +22,8 @@ export class Entity<Props> {
 		this._props = value
 	}
 
-	constructor(props: Props, id?: string) {
-		this._uniqueEnityId = new UniqueEntityID(id)
+	protected constructor(props: Props, id?: UniqueEntityID) {
+		this._uniqueEnityId = id ?? new UniqueEntityID()
 
 		this._props = props
 

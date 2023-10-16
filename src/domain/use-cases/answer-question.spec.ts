@@ -21,8 +21,12 @@ test('create an answer', async () => {
 			_id: answer.id,
 		},
 		_props: {
-			authorId: '1',
-			questionId: '1',
+			authorId: {
+				_id: '1',
+			},
+			questionId: {
+				_id: '1',
+			},
 			content: 'This is the answer',
 		},
 		_createdAt: expect.any(Date),
