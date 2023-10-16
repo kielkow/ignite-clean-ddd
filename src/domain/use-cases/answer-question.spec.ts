@@ -17,7 +17,9 @@ test('create an answer', async () => {
 	})
 
 	expect(answer).toEqual({
-		_id: answer.id,
+		_uniqueEnityId: {
+			_id: answer.id,
+		},
 		_props: {
 			authorId: '1',
 			questionId: '1',
