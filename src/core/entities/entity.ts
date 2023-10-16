@@ -1,16 +1,21 @@
 import { UniqueEntityID } from './unique-entity-id'
 
 export class Entity<Props> {
-	protected _props: Props
 	private _uniqueEnityId: UniqueEntityID
 
-	get props(): Props {
-		return this._props
-	}
+	protected _props: Props
+
+	private _createdAt: Date
+
+	private _updatedAt?: Date
 
 	get id(): string {
 		const { id } = this._uniqueEnityId
 		return id
+	}
+
+	get props(): Props {
+		return this._props
 	}
 
 	set props(value: Props) {
@@ -18,7 +23,12 @@ export class Entity<Props> {
 	}
 
 	constructor(props: Props, id?: string) {
-		this._props = props
 		this._uniqueEnityId = new UniqueEntityID(id)
+
+		this._props = props
+
+		this._createdAt = new Date()
+
+		this._updatedAt = undefined
 	}
 }

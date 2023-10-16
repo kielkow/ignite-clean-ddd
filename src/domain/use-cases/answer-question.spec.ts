@@ -25,5 +25,7 @@ test('create an answer', async () => {
 			questionId: '1',
 			content: 'This is the answer',
 		},
+		_createdAt: expect.any(Date),
+		_updatedAt: undefined,
 	})
 })
