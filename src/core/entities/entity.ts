@@ -30,6 +30,10 @@ export class Entity<Props> {
 		this._props = value
 	}
 
+	set updatedAt(date: Date | undefined) {
+		this._updatedAt = date
+	}
+
 	protected constructor(props: Props, id?: UniqueEntityID) {
 		this._uniqueEnityId = id ?? new UniqueEntityID()
 
