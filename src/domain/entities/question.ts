@@ -1,4 +1,4 @@
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
@@ -40,9 +40,9 @@ export class Question extends Entity<QuestionProps> {
 		return this.props.bestAnswerId
 	}
 
-	// get isNew(): boolean {
-	// 	return dayjs().diff(this.createdAt, 'day') <= 3
-	// }
+	get isNew(): boolean {
+		return dayjs().diff(this.createdAt, 'day') <= 3
+	}
 
 	static create(
 		props: Optional<QuestionProps, 'difficulty'>,
