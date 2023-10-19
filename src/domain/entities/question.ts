@@ -44,6 +44,10 @@ export class Question extends Entity<QuestionProps> {
 		return dayjs().diff(this.createdAt, 'day') <= 3
 	}
 
+	get except() {
+		return this.props.content.substring(0, 120).trimEnd().concat('...')
+	}
+
 	static create(
 		props: Optional<QuestionProps, 'difficulty'>,
 		id?: UniqueEntityID,
