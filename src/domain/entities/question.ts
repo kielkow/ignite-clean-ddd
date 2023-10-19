@@ -50,6 +50,8 @@ export class Question extends Entity<QuestionProps> {
 
 	set title(value: string) {
 		this.props.title = value
+		this.props.slug = Slug.createFromText(value)
+
 		this.touch()
 	}
 
@@ -58,18 +60,24 @@ export class Question extends Entity<QuestionProps> {
 		this.touch()
 	}
 
+	set bestAnswerId(value: UniqueEntityID | undefined) {
+		this.props.bestAnswerId = value
+		this.touch()
+	}
+
 	private touch() {
 		this.updatedAt = new Date()
 	}
 
 	static create(
-		props: Optional<QuestionProps, 'difficulty'>,
+		props: Optional<QuestionProps, 'difficulty' | 'slug'>,
 		id?: UniqueEntityID,
 	) {
 		const question = new Question(
 			{
 				...props,
 				difficulty: props.difficulty ?? 'medium',
+				slug: props.slug ?? Slug.createFromText(props.title),
 			},
 			id,
 		)
