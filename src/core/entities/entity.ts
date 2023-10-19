@@ -18,6 +18,14 @@ export class Entity<Props> {
 		return this._props
 	}
 
+	get createdAt(): Date {
+		return this._createdAt
+	}
+
+	get updatedAt(): Date | undefined {
+		return this._updatedAt
+	}
+
 	set props(value: Props) {
 		this._props = value
 	}

@@ -5,4 +5,17 @@ interface InstructorProps {
 	email: string
 }
 
-export class Instructor extends Entity<InstructorProps> {}
+export class Instructor extends Entity<InstructorProps> {
+	get name() {
+		return this.props.name
+	}
+
+	get email() {
+		return this.props.email
+	}
+
+	static create(props: InstructorProps) {
+		const instructor = new Instructor(props)
+		return instructor
+	}
+}
