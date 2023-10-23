@@ -16,6 +16,7 @@
     "@rocketseat/eslint-config": "1.2.0",
     "@types/node": "^20.8.2",
     "eslint": "8.43.0",
+    "eslint-plugin-vitest-globals": "1.4.0",
     "husky": "^8.0.3",
     "tsup": "^7.1.0",
     "typescript": "^5.2.2",
