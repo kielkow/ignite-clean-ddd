@@ -1,6 +1,7 @@
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { InMemoryAnswersRepository } from '@/test/in-memory-answers-repository'
+
+import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
 
 import { FindAnswersByQuestionIDUseCase } from '.'
 
