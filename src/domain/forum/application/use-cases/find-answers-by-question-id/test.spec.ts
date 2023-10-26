@@ -1,9 +1,9 @@
-import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
 
 import { FindAnswersByQuestionIDUseCase } from '.'
+import { makeAnswer } from '@/test/factories/make-answer'
 
 describe('FindAnswersByQuestionIDUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository
@@ -15,14 +15,14 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 	})
 
 	it('should be able to find answers by question ID', async () => {
-		const firstAnswerPayload = Answer.create({
+		const firstAnswerPayload = makeAnswer({
 			authorId: new UniqueEntityID('1'),
 			questionId: new UniqueEntityID('1'),
 			content: 'This is the first answer',
 		})
 		await inMemoryAnswersRepository.createAnswer(firstAnswerPayload)
 
-		const secondAnswerPayload = Answer.create({
+		const secondAnswerPayload = makeAnswer({
 			authorId: new UniqueEntityID('2'),
 			questionId: new UniqueEntityID('1'),
 			content: 'This is the second answer',
