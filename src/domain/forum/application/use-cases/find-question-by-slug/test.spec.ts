@@ -1,6 +1,4 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { Question } from '@/domain/forum/enterprise/entities/question'
-
+import { makeQuestion } from '@/test/factories/make-question'
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 
 import { FindQuestionBySlugUseCase } from '.'
@@ -15,11 +13,7 @@ describe('FindQuestionBySlugUseCase', () => {
 	})
 
 	it('should be able to find question by slug', async () => {
-		const payloadQuestion = Question.create({
-			title: 'This is the title',
-			content: 'This is the question',
-			authorId: new UniqueEntityID('1'),
-		})
+		const payloadQuestion = makeQuestion()
 
 		await inMemoryQuestionsRepository.createQuestion(payloadQuestion)
 
