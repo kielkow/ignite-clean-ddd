@@ -6,11 +6,17 @@ import {
 } from '@/domain/forum/enterprise/entities/question'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-export function makeQuestion(props: Partial<QuestionProps> = {}): Question {
-	return Question.create({
-		title: faker.lorem.sentence(),
-		content: faker.lorem.text(),
-		authorId: new UniqueEntityID(),
-		...props,
-	})
+export function makeQuestion(
+	props: Partial<QuestionProps> = {},
+	id?: UniqueEntityID,
+): Question {
+	return Question.create(
+		{
+			title: faker.lorem.sentence(),
+			content: faker.lorem.text(),
+			authorId: new UniqueEntityID(),
+			...props,
+		},
+		id,
+	)
 }
