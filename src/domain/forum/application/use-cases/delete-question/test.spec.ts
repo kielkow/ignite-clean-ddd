@@ -25,4 +25,14 @@ describe('DeleteQuestionUseCase', () => {
 
 		expect(questionExists).toBeUndefined()
 	})
+
+	it('should not be able to delete an question if is not the author', async () => {
+		const question = await inMemoryQuestionsRepository.createQuestion(
+			makeQuestion(),
+		)
+
+		await expect(
+			sut.execute({ id: question.id, authorId: 'non-author-id' }),
+		).rejects.toThrow('Only the author can delete the question')
+	})
 })
