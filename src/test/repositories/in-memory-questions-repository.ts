@@ -12,4 +12,12 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 	async findBySlug(slug: string): Promise<Question | undefined> {
 		return this.questions.find((question) => question.slug.value === slug)
 	}
+
+	async findById(id: string): Promise<Question | undefined> {
+		return this.questions.find((question) => question.id === id)
+	}
+
+	async deleteQuestion(id: string): Promise<void> {
+		this.questions = this.questions.filter((question) => question.id !== id)
+	}
 }
