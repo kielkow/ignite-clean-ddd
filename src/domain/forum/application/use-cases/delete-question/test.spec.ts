@@ -17,7 +17,7 @@ describe('DeleteQuestionUseCase', () => {
 			makeQuestion(),
 		)
 
-		await sut.execute(question.id)
+		await sut.execute({ id: question.id, authorId: question.authorId.id })
 
 		const questionExists = await inMemoryQuestionsRepository.findById(
 			question.id,
