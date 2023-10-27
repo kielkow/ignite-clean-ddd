@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 import {
 	Question,
 	QuestionProps,
@@ -6,9 +8,9 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export function makeQuestion(props: Partial<QuestionProps> = {}): Question {
 	return Question.create({
-		title: 'This is the title',
-		content: 'This is the question',
-		authorId: new UniqueEntityID('1'),
+		title: faker.lorem.sentence(),
+		content: faker.lorem.text(),
+		authorId: new UniqueEntityID(),
 		...props,
 	})
 }

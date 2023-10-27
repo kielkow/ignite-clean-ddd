@@ -13,7 +13,9 @@ describe('FindQuestionBySlugUseCase', () => {
 	})
 
 	it('should be able to find question by slug', async () => {
-		const payloadQuestion = makeQuestion()
+		const payloadQuestion = makeQuestion({
+			title: 'This is the title',
+		})
 
 		await inMemoryQuestionsRepository.createQuestion(payloadQuestion)
 
@@ -25,9 +27,9 @@ describe('FindQuestionBySlugUseCase', () => {
 			},
 			_props: {
 				authorId: {
-					_id: '1',
+					_id: expect.any(String),
 				},
-				content: 'This is the question',
+				content: expect.any(String),
 				title: 'This is the title',
 				difficulty: 'medium',
 				slug: {
