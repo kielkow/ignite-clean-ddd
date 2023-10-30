@@ -8,4 +8,6 @@ export interface AnswersRepository {
 	findByQuestionID(questionId: string): Promise<Answer[]>
 
 	deleteAnswer(id: string): Promise<void>
+
+	editAnswer(answer: Answer): Promise<void>
 }
