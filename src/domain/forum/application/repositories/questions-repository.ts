@@ -8,4 +8,6 @@ export interface QuestionsRepository {
 	findById(id: string): Promise<Question | undefined>
 
 	deleteQuestion(id: string): Promise<void>
+
+	editQuestion(question: Question): Promise<void>
 }
