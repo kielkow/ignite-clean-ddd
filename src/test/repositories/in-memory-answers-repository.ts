@@ -15,4 +15,13 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 			(answer) => answer.questionId.id === new UniqueEntityID(questionId).id,
 		)
 	}
+
+	async findById(id: string): Promise<Answer | undefined> {
+		return this.answers.find((answer) => answer.id === id)
+	}
+
+	async deleteAnswer(id: string): Promise<void> {
+		const index = this.answers.findIndex((answer) => answer.id === id)
+		this.answers.splice(index, 1)
+	}
 }
