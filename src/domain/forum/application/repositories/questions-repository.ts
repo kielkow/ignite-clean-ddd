@@ -1,3 +1,5 @@
+import { PaginationParams } from '@/core/repositories/pagination-params'
+
 import { Question } from '../../enterprise/entities/question'
 
 export interface QuestionsRepository {
@@ -10,4 +12,6 @@ export interface QuestionsRepository {
 	deleteQuestion(id: string): Promise<void>
 
 	editQuestion(question: Question): Promise<void>
+
+	listRecentQuestions(params: PaginationParams): Promise<Question[]>
 }
