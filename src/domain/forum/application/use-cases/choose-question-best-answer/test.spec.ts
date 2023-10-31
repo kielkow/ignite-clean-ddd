@@ -48,4 +48,64 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 		expect(questionEdited?.bestAnswerId).toBeTruthy()
 		expect(questionEdited?.bestAnswerId?.id).toEqual(answer.id)
 	})
+
+	it('should not be able to choose question best answer if question does not exist', async () => {
+		await expect(
+			sut.execute({
+				authorId: 'any_author_id',
+				answerId: 'any_answer_id',
+				questionId: 'any_question_id',
+			}),
+		).rejects.toThrow('Question not found')
+	})
+
+	it('should not be able to choose question best answer if answer does not exist', async () => {
+		const question = await inMemoryQuestionsRepository.createQuestion(
+			makeQuestion(),
+		)
+
+		await expect(
+			sut.execute({
+				authorId: question.authorId.id,
+				answerId: 'any_answer_id',
+				questionId: question.id,
+			}),
+		).rejects.toThrow('Question not found')
+	})
+
+	it('should not be able to choose question best answer if answer does not belong to the question', async () => {
+		const question = await inMemoryQuestionsRepository.createQuestion(
+			makeQuestion(),
+		)
+
+		const answer = await inMemoryAnswersRepository.createAnswer(makeAnswer())
+
+		await expect(
+			sut.execute({
+				authorId: question.authorId.id,
+				answerId: answer.id,
+				questionId: question.id,
+			}),
+		).rejects.toThrow('Answer does not belong to the question')
+	})
+
+	it('should not be able to choose question best answer if author is not the question author', async () => {
+		const question = await inMemoryQuestionsRepository.createQuestion(
+			makeQuestion(),
+		)
+
+		const answer = await inMemoryAnswersRepository.createAnswer(
+			makeAnswer({
+				questionId: new UniqueEntityID(question.id),
+			}),
+		)
+
+		await expect(
+			sut.execute({
+				authorId: 'any_author_id',
+				answerId: answer.id,
+				questionId: question.id,
+			}),
+		).rejects.toThrow('Only the author can choose the question best answer')
+	})
 })
