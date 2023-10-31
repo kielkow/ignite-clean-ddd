@@ -9,6 +9,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 export function makeQuestion(
 	props: Partial<QuestionProps> = {},
 	id?: UniqueEntityID,
+	createdAt?: Date,
 ): Question {
 	return Question.create(
 		{
@@ -18,5 +19,6 @@ export function makeQuestion(
 			...props,
 		},
 		id,
+		createdAt,
 	)
 }

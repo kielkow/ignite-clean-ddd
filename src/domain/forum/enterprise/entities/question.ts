@@ -72,6 +72,7 @@ export class Question extends Entity<QuestionProps> {
 	static create(
 		props: Optional<QuestionProps, 'difficulty' | 'slug'>,
 		id?: UniqueEntityID,
+		createdAt?: Date,
 	) {
 		const question = new Question(
 			{
@@ -80,6 +81,7 @@ export class Question extends Entity<QuestionProps> {
 				slug: props.slug ?? Slug.createFromText(props.title),
 			},
 			id,
+			createdAt,
 		)
 
 		return question

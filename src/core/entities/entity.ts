@@ -34,12 +34,12 @@ export class Entity<Props> {
 		this._updatedAt = date
 	}
 
-	protected constructor(props: Props, id?: UniqueEntityID) {
+	protected constructor(props: Props, id?: UniqueEntityID, createdAt?: Date) {
 		this._uniqueEnityId = id ?? new UniqueEntityID()
 
 		this._props = props
 
-		this._createdAt = new Date()
+		this._createdAt = createdAt ?? new Date()
 
 		this._updatedAt = undefined
 	}
