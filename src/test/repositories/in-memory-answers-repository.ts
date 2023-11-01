@@ -1,6 +1,5 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
+import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 
 export class InMemoryAnswersRepository implements AnswersRepository {
 	private answers: Answer[] = []
@@ -11,9 +10,7 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 	}
 
 	async findByQuestionID(questionId: string): Promise<Answer[]> {
-		return this.answers.filter(
-			(answer) => answer.questionId.id === new UniqueEntityID(questionId).id,
-		)
+		return this.answers.filter((answer) => answer.questionId.id === questionId)
 	}
 
 	async findById(id: string): Promise<Answer | undefined> {
@@ -28,5 +25,22 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 	async editAnswer(answer: Answer): Promise<void> {
 		const index = this.answers.findIndex((a) => a.id === answer.id)
 		this.answers[index] = answer
+	}
+
+	async listQuetionAnswers(params: {
+		questionId: string
+		page: number
+		perPage: number
+	}): Promise<Answer[]> {
+		const { page = 1, perPage = 10, questionId } = params
+
+		const start = (page - 1) * perPage
+		const end = start + perPage
+
+		const answers = this.answers.filter(
+			(answer) => answer.questionId.id === questionId,
+		)
+
+		return answers.slice(start, end)
 	}
 }
