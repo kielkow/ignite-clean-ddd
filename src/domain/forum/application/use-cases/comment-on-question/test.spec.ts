@@ -49,4 +49,14 @@ describe('CommentOnQuestionUseCase', () => {
 			_updatedAt: undefined,
 		})
 	})
+
+	it('should not be able to create an question comment if question does not exists', async () => {
+		await expect(
+			sut.execute({
+				questionId: '1',
+				authorId: '1',
+				content: 'This is the comment',
+			}),
+		).rejects.toThrow('Question not found')
+	})
 })
