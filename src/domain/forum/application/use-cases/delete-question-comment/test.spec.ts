@@ -12,7 +12,7 @@ describe('DeleteQuestionCommentByIdUseCase', () => {
 		sut = new DeleteQuestionCommentUseCase(inMemoryQuestionsRepository)
 	})
 
-	it('should be able to delete question commet by ID', async () => {
+	it('should be able to delete question comment by ID', async () => {
 		const comment = makeQuestionComment()
 
 		await inMemoryQuestionsRepository.create(comment)
