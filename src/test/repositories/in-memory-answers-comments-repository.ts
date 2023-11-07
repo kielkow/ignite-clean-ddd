@@ -15,10 +15,21 @@ export class InMemoryAnswersCommentsRepository
 		return this.answersComments.find((answerComment) => answerComment.id === id)
 	}
 
-	async findAll(answerId: string): Promise<AnswerComment[]> {
-		return this.answersComments.filter(
-			(answerComment) => answerComment.answerId.id === answerId,
+	async findAll(params: {
+		answerId: string
+		page: number
+		perPage: number
+	}): Promise<AnswerComment[]> {
+		const { page = 1, perPage = 10, answerId } = params
+
+		const start = (page - 1) * perPage
+		const end = start + perPage
+
+		const answerComments = this.answersComments.filter(
+			(comment) => comment.answerId.id === answerId,
 		)
+
+		return answerComments.slice(start, end)
 	}
 
 	async delete(id: string): Promise<void> {

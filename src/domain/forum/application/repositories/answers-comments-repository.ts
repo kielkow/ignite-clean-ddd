@@ -5,7 +5,11 @@ export interface AnswersCommentsRepository {
 
 	findById(id: string): Promise<AnswerComment | undefined>
 
-	findAll(answerId: string): Promise<AnswerComment[]>
+	findAll(params: {
+		answerId: string
+		page: number
+		perPage: number
+	}): Promise<AnswerComment[]>
 
 	delete(id: string): Promise<void>
 }
