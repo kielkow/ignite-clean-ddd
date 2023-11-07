@@ -17,10 +17,21 @@ export class InMemoryQuestionsCommentsRepository
 		)
 	}
 
-	async findAll(questionId: string): Promise<QuestionComment[]> {
-		return this.questionsComments.filter(
-			(questionComment) => questionComment.questionId.id === questionId,
+	async findAll(params: {
+		questionId: string
+		page: number
+		perPage: number
+	}): Promise<QuestionComment[]> {
+		const { page = 1, perPage = 10, questionId } = params
+
+		const start = (page - 1) * perPage
+		const end = start + perPage
+
+		const questionComments = this.questionsComments.filter(
+			(comment) => comment.questionId.id === questionId,
 		)
+
+		return questionComments.slice(start, end)
 	}
 
 	async delete(id: string): Promise<void> {
