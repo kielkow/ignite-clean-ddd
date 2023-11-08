@@ -33,7 +33,7 @@ describe('DeleteAnswerCommentByIdUseCase', () => {
 				id: 'invalid_id',
 				authorId: 'any_author_id',
 			}),
-		).rejects.toThrow('Answer comment not found')
+		).resolves.toEqual({ error: 'Answer comment not found' })
 	})
 
 	it('should not be able to delete answer comment by ID if user is not the author', async () => {
@@ -46,6 +46,8 @@ describe('DeleteAnswerCommentByIdUseCase', () => {
 				id: comment.id,
 				authorId: 'invalid_author_id',
 			}),
-		).rejects.toThrow('You are not allowed to delete this answer comment')
+		).resolves.toEqual({
+			error: 'You are not allowed to delete this answer comment',
+		})
 	})
 })
