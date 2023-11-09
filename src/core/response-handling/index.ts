@@ -5,7 +5,7 @@ export class Fail<F> {
 		this.error = error
 	}
 
-	static is(value: any): value is Fail<any> {
+	static is(value: any): boolean {
 		return value instanceof Fail
 	}
 }
@@ -17,7 +17,7 @@ export class Success<S> {
 		this.value = value
 	}
 
-	static is(value: any): value is Success<any> {
+	static is(value: any): boolean {
 		return value instanceof Success
 	}
 }
