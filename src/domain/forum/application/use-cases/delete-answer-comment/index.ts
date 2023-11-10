@@ -1,12 +1,13 @@
 import { ResponseHandling, fail, success } from '@/core/response-handling'
 import { AnswersCommentsRepository } from '../../repositories/answers-comments-repository'
+import { NotAllowedError, ResourceNotFoundError } from '../../errors'
 
 interface Input {
 	id: string
 	authorId: string
 }
 
-type Output = ResponseHandling<string, void>
+type Output = ResponseHandling<ResourceNotFoundError | NotAllowedError, void>
 
 export class DeleteAnswerCommentUseCase {
 	constructor(
@@ -16,10 +17,10 @@ export class DeleteAnswerCommentUseCase {
 	async execute({ id, authorId }: Input): Promise<Output> {
 		const answerComment = await this.answerCommentRepository.findById(id)
 
-		if (!answerComment) return fail('Answer comment not found')
+		if (!answerComment) return fail(new ResourceNotFoundError())
 
 		if (answerComment.authorId.id !== authorId) {
-			return fail('You are not allowed to delete this answer comment')
+			return fail(new NotAllowedError())
 		}
 
 		await this.answerCommentRepository.delete(id)

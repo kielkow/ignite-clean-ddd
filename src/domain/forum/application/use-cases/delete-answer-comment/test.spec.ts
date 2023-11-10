@@ -1,7 +1,10 @@
+import { Fail } from '@/core/response-handling'
 import { makeAnswerComment } from '@/test/factories/make-answer-comment'
 import { InMemoryAnswersCommentsRepository } from '@/test/repositories/in-memory-answers-comments-repository'
 
 import { DeleteAnswerCommentUseCase } from '.'
+
+import { NotAllowedError, ResourceNotFoundError } from '../../errors'
 
 describe('DeleteAnswerCommentByIdUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersCommentsRepository
@@ -28,12 +31,14 @@ describe('DeleteAnswerCommentByIdUseCase', () => {
 	})
 
 	it('should not be able to delete answer comment by ID if it does not exist', async () => {
-		await expect(
-			sut.execute({
-				id: 'invalid_id',
-				authorId: 'any_author_id',
-			}),
-		).resolves.toEqual({ error: 'Answer comment not found' })
+		const result = await sut.execute({
+			id: 'invalid_id',
+			authorId: 'any_author_id',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 
 	it('should not be able to delete answer comment by ID if user is not the author', async () => {
@@ -41,13 +46,13 @@ describe('DeleteAnswerCommentByIdUseCase', () => {
 
 		await inMemoryAnswersRepository.create(comment)
 
-		await expect(
-			sut.execute({
-				id: comment.id,
-				authorId: 'invalid_author_id',
-			}),
-		).resolves.toEqual({
-			error: 'You are not allowed to delete this answer comment',
+		const result = await sut.execute({
+			id: comment.id,
+			authorId: 'invalid_author_id',
 		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(NotAllowedError) })
 	})
 })
