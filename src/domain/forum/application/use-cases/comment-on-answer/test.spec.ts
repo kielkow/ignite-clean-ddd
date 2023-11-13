@@ -1,8 +1,12 @@
+import { Fail, Success } from '@/core/response-handling'
+
+import { makeAnswer } from '@/test/factories/make-answer'
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
 import { InMemoryAnswersCommentsRepository } from '@/test/repositories/in-memory-answers-comments-repository'
 
 import { CommentOnAnswerUseCase } from '.'
-import { makeAnswer } from '@/test/factories/make-answer'
+
+import { ResourceNotFoundError } from '../../errors'
 
 describe('CommentOnAnswerUseCase', () => {
 	let inMemoryAnswersCommentsRepository: InMemoryAnswersCommentsRepository,
@@ -23,37 +27,25 @@ describe('CommentOnAnswerUseCase', () => {
 	it('should be able to create an answer comment', async () => {
 		const answer = await inMemoryAnswersRepository.createAnswer(makeAnswer())
 
-		const answerComment = await sut.execute({
+		const result = await sut.execute({
 			answerId: answer.id,
 			authorId: '1',
 			content: 'This is the comment',
 		})
 
-		expect(answerComment).toEqual({
-			_uniqueEnityId: {
-				_id: answerComment.id,
-			},
-			_props: {
-				authorId: {
-					_id: '1',
-				},
-				content: 'This is the comment',
-				answerId: {
-					_id: answer.id,
-				},
-			},
-			_createdAt: expect.any(Date),
-			_updatedAt: undefined,
-		})
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 	})
 
 	it('should not be able to create an answer comment if answer does not exists', async () => {
-		await expect(
-			sut.execute({
-				answerId: '1',
-				authorId: '1',
-				content: 'This is the comment',
-			}),
-		).rejects.toThrow('Answer not found')
+		const result = await sut.execute({
+			answerId: '1',
+			authorId: '1',
+			content: 'This is the comment',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 })

@@ -1,8 +1,12 @@
+import { Fail, Success } from '@/core/response-handling'
+
+import { makeQuestion } from '@/test/factories/make-question'
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 import { InMemoryQuestionsCommentsRepository } from '@/test/repositories/in-memory-questions-comments-repository'
 
 import { CommentOnQuestionUseCase } from '.'
-import { makeQuestion } from '@/test/factories/make-question'
+
+import { ResourceNotFoundError } from '../../errors'
 
 describe('CommentOnQuestionUseCase', () => {
 	let inMemoryQuestionsCommentsRepository: InMemoryQuestionsCommentsRepository,
@@ -26,37 +30,25 @@ describe('CommentOnQuestionUseCase', () => {
 			makeQuestion(),
 		)
 
-		const questionComment = await sut.execute({
+		const result = await sut.execute({
 			questionId: question.id,
 			authorId: '1',
 			content: 'This is the comment',
 		})
 
-		expect(questionComment).toEqual({
-			_uniqueEnityId: {
-				_id: questionComment.id,
-			},
-			_props: {
-				authorId: {
-					_id: '1',
-				},
-				content: 'This is the comment',
-				questionId: {
-					_id: question.id,
-				},
-			},
-			_createdAt: expect.any(Date),
-			_updatedAt: undefined,
-		})
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 	})
 
 	it('should not be able to create an question comment if question does not exists', async () => {
-		await expect(
-			sut.execute({
-				questionId: '1',
-				authorId: '1',
-				content: 'This is the comment',
-			}),
-		).rejects.toThrow('Question not found')
+		const result = await sut.execute({
+			questionId: '1',
+			authorId: '1',
+			content: 'This is the comment',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 })

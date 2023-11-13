@@ -1,9 +1,12 @@
 import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { ResponseHandling, success, fail } from '@/core/response-handling'
 
 import { QuestionsRepository } from '../../repositories/questions-repository'
 import { QuestionsCommentsRepository } from '../../repositories/questions-comments-repository'
+
+import { ResourceNotFoundError } from '../../errors'
 
 interface Input {
 	questionId: string
@@ -11,18 +14,18 @@ interface Input {
 	content: string
 }
 
+type Output = ResponseHandling<ResourceNotFoundError, QuestionComment>
+
 export class CommentOnQuestionUseCase {
 	constructor(
 		private questionsRepository: QuestionsRepository,
 		private questionsCommentsRepository: QuestionsCommentsRepository,
 	) {}
 
-	async execute(input: Input): Promise<QuestionComment> {
-		const { questionId, authorId, content } = input
-
+	async execute({ questionId, authorId, content }: Input): Promise<Output> {
 		const question = await this.questionsRepository.findById(questionId)
 
-		if (!question) throw new Error('Question not found')
+		if (!question) return fail(new ResourceNotFoundError())
 
 		const comment = QuestionComment.create({
 			questionId: new UniqueEntityID(questionId),
@@ -30,6 +33,8 @@ export class CommentOnQuestionUseCase {
 			content,
 		})
 
-		return await this.questionsCommentsRepository.create(comment)
+		const result = await this.questionsCommentsRepository.create(comment)
+
+		return success(result)
 	}
 }
