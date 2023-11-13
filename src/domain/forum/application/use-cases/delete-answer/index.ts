@@ -1,24 +1,30 @@
+import { ResponseHandling, fail, success } from '@/core/response-handling'
+
+import { NotAllowedError, ResourceNotFoundError } from '../../errors'
+
 import { AnswersRepository } from '../../repositories/answers-repository'
 
-interface DeleteAnswerRequest {
+interface Input {
 	id: string
 	authorId: string
 }
 
+type Output = ResponseHandling<ResourceNotFoundError | NotAllowedError, void>
+
 export class DeleteAnswerUseCase {
 	constructor(private readonly answersRepository: AnswersRepository) {}
 
-	async execute({ id, authorId }: DeleteAnswerRequest): Promise<void> {
+	async execute({ id, authorId }: Input): Promise<Output> {
 		const answer = await this.answersRepository.findById(id)
 
-		if (!answer) {
-			throw new Error('Answer not found')
-		}
+		if (!answer) return fail(new ResourceNotFoundError())
 
 		if (answer.authorId.id !== authorId) {
-			throw new Error('Only the author can delete the answer')
+			return fail(new NotAllowedError())
 		}
 
-		return await this.answersRepository.deleteAnswer(id)
+		const result = await this.answersRepository.deleteAnswer(id)
+
+		return success(result)
 	}
 }

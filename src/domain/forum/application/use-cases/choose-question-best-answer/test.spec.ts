@@ -1,4 +1,4 @@
-import { Fail } from '@/core/response-handling'
+import { Fail, Success } from '@/core/response-handling'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { makeAnswer } from '@/test/factories/make-answer'
@@ -37,7 +37,7 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 			}),
 		)
 
-		await sut.execute({
+		const result = await sut.execute({
 			authorId: question.authorId.id,
 			answerId: answer.id,
 			questionId: question.id,
@@ -50,6 +50,9 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 		expect(questionEdited).toBeTruthy()
 		expect(questionEdited?.bestAnswerId).toBeTruthy()
 		expect(questionEdited?.bestAnswerId?.id).toEqual(answer.id)
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 	})
 
 	it('should not be able to choose question best answer if question does not exist', async () => {
