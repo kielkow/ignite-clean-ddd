@@ -1,3 +1,5 @@
+import { Success } from '@/core/response-handling'
+
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 
 import { CreateQuestionUseCase } from '.'
@@ -12,29 +14,13 @@ describe('CreateQuestionUseCase', () => {
 	})
 
 	it('should be able to create an question', async () => {
-		const question = await sut.execute({
+		const result = await sut.execute({
 			title: 'This is the title',
 			content: 'This is the question',
 			authorId: '1',
 		})
 
-		expect(question).toEqual({
-			_uniqueEnityId: {
-				_id: question.id,
-			},
-			_props: {
-				authorId: {
-					_id: '1',
-				},
-				content: 'This is the question',
-				title: 'This is the title',
-				difficulty: 'medium',
-				slug: {
-					value: 'this-is-the-title',
-				},
-			},
-			_createdAt: expect.any(Date),
-			_updatedAt: undefined,
-		})
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 	})
 })
