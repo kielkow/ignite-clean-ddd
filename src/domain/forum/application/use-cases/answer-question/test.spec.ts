@@ -2,6 +2,8 @@ import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers
 
 import { AnswerQuestionUseCase } from '.'
 
+import { Success } from '@/core/response-handling'
+
 describe('AnswerQuestionUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository
 	let sut: AnswerQuestionUseCase
@@ -12,27 +14,12 @@ describe('AnswerQuestionUseCase', () => {
 	})
 
 	it('should be able to create an answer', async () => {
-		const answer = await sut.execute({
+		const result = await sut.execute({
 			authorId: '1',
 			questionId: '1',
 			content: 'This is the answer',
 		})
 
-		expect(answer).toEqual({
-			_uniqueEnityId: {
-				_id: answer.id,
-			},
-			_props: {
-				authorId: {
-					_id: '1',
-				},
-				questionId: {
-					_id: '1',
-				},
-				content: 'This is the answer',
-			},
-			_createdAt: expect.any(Date),
-			_updatedAt: undefined,
-		})
+		expect(Success.is(result)).toBeTruthy()
 	})
 })

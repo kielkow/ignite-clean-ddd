@@ -1,13 +1,18 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { ResponseHandling, fail, success } from '@/core/response-handling'
 
 import { AnswersRepository } from '../../repositories/answers-repository'
 import { QuestionsRepository } from '../../repositories/questions-repository'
 
-interface ChooseQuestionBestAnswerRequest {
+import { NotAllowedError, ResourceNotFoundError } from '../../errors'
+
+interface Input {
 	authorId: string
 	answerId: string
 	questionId: string
 }
+
+type Output = ResponseHandling<ResourceNotFoundError | NotAllowedError, void>
 
 export class ChooseQuestionBestAnswerUseCase {
 	constructor(
@@ -15,27 +20,25 @@ export class ChooseQuestionBestAnswerUseCase {
 		private readonly questionsRepository: QuestionsRepository,
 	) {}
 
-	async execute({
-		authorId,
-		answerId,
-		questionId,
-	}: ChooseQuestionBestAnswerRequest): Promise<void> {
+	async execute({ authorId, answerId, questionId }: Input): Promise<Output> {
 		const question = await this.questionsRepository.findById(questionId)
-		if (!question) throw new Error('Question not found')
+		if (!question) return fail(new ResourceNotFoundError())
 
 		const answer = await this.answersRepository.findById(answerId)
-		if (!answer) throw new Error('Question not found')
+		if (!answer) return fail(new ResourceNotFoundError())
 
 		if (answer.questionId.id !== questionId) {
-			throw new Error('Answer does not belong to the question')
+			return fail(new NotAllowedError())
 		}
 
 		if (question.authorId.id !== authorId) {
-			throw new Error('Only the author can choose the question best answer')
+			return fail(new NotAllowedError())
 		}
 
 		question.bestAnswerId = new UniqueEntityID(answerId)
 
-		return await this.questionsRepository.editQuestion(question)
+		await this.questionsRepository.editQuestion(question)
+
+		return success()
 	}
 }

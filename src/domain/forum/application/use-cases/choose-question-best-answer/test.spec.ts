@@ -1,3 +1,4 @@
+import { Fail } from '@/core/response-handling'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { makeAnswer } from '@/test/factories/make-answer'
@@ -7,6 +8,8 @@ import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 
 import { ChooseQuestionBestAnswerUseCase } from '.'
+
+import { NotAllowedError, ResourceNotFoundError } from '../../errors'
 
 describe('ChooseQuestionBestAnswerUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository
@@ -50,13 +53,15 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 	})
 
 	it('should not be able to choose question best answer if question does not exist', async () => {
-		await expect(
-			sut.execute({
-				authorId: 'any_author_id',
-				answerId: 'any_answer_id',
-				questionId: 'any_question_id',
-			}),
-		).rejects.toThrow('Question not found')
+		const result = await sut.execute({
+			authorId: 'any_author_id',
+			answerId: 'any_answer_id',
+			questionId: 'any_question_id',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 
 	it('should not be able to choose question best answer if answer does not exist', async () => {
@@ -64,13 +69,15 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 			makeQuestion(),
 		)
 
-		await expect(
-			sut.execute({
-				authorId: question.authorId.id,
-				answerId: 'any_answer_id',
-				questionId: question.id,
-			}),
-		).rejects.toThrow('Question not found')
+		const result = await sut.execute({
+			authorId: question.authorId.id,
+			answerId: 'any_answer_id',
+			questionId: question.id,
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 
 	it('should not be able to choose question best answer if answer does not belong to the question', async () => {
@@ -80,13 +87,15 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 
 		const answer = await inMemoryAnswersRepository.createAnswer(makeAnswer())
 
-		await expect(
-			sut.execute({
-				authorId: question.authorId.id,
-				answerId: answer.id,
-				questionId: question.id,
-			}),
-		).rejects.toThrow('Answer does not belong to the question')
+		const result = await sut.execute({
+			authorId: question.authorId.id,
+			answerId: answer.id,
+			questionId: question.id,
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(NotAllowedError) })
 	})
 
 	it('should not be able to choose question best answer if author is not the question author', async () => {
@@ -100,12 +109,14 @@ describe('ChooseQuestionBestAnswerUseCase', () => {
 			}),
 		)
 
-		await expect(
-			sut.execute({
-				authorId: 'any_author_id',
-				answerId: answer.id,
-				questionId: question.id,
-			}),
-		).rejects.toThrow('Only the author can choose the question best answer')
+		const result = await sut.execute({
+			authorId: 'any_author_id',
+			answerId: answer.id,
+			questionId: question.id,
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(NotAllowedError) })
 	})
 })
