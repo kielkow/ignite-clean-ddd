@@ -1,5 +1,9 @@
+import { Success, Fail } from '@/core/response-handling'
+
 import { makeAnswer } from '@/test/factories/make-answer'
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
+
+import { NotAllowedError, ResourceNotFoundError } from '../../errors'
 
 import { EditAnswerUseCase } from '.'
 
@@ -15,7 +19,7 @@ describe('EditAnswerUseCase', () => {
 	it('should be able to edit an answer', async () => {
 		const answer = await inMemoryAnswersRepository.createAnswer(makeAnswer())
 
-		await sut.execute({
+		const result = await sut.execute({
 			id: answer.id,
 			authorId: answer.authorId.id,
 			content: 'Edit Content',
@@ -25,17 +29,34 @@ describe('EditAnswerUseCase', () => {
 
 		expect(answerEdited).toBeTruthy()
 		expect(answerEdited?.content).toBe('Edit Content')
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 	})
 
 	it('should not be able to edit an answer if is not the author', async () => {
 		const answer = await inMemoryAnswersRepository.createAnswer(makeAnswer())
 
-		await expect(
-			sut.execute({
-				id: answer.id,
-				authorId: 'non-author-id',
-				content: 'Edit Content',
-			}),
-		).rejects.toThrow('Only the author can edit the answer')
+		const result = await sut.execute({
+			id: answer.id,
+			authorId: 'non-author-id',
+			content: 'Edit Content',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(NotAllowedError) })
+	})
+
+	it('should not be able to edit an answer if does not exists', async () => {
+		const result = await sut.execute({
+			id: 'non-existing-answer-id',
+			authorId: 'any-author-id',
+			content: 'Edit Content',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 })
