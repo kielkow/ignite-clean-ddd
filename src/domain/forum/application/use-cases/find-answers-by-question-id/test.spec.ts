@@ -1,3 +1,5 @@
+import { Success } from '@/core/response-handling'
+
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
@@ -29,7 +31,11 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 		})
 		await inMemoryAnswersRepository.createAnswer(secondAnswerPayload)
 
-		const answers = await sut.execute('1')
+		const result = await sut.execute('1')
+		const answers = result.getValue()
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 
 		expect(answers).toEqual([
 			{
@@ -65,5 +71,15 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 				_updatedAt: undefined,
 			},
 		])
+	})
+
+	it('should return an empty array if no answers are found', async () => {
+		const result = await sut.execute('1')
+		const answers = result.getValue()
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
+
+		expect(answers).toEqual([])
 	})
 })
