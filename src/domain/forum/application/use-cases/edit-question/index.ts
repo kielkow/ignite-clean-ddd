@@ -1,32 +1,35 @@
+import { ResponseHandling, success, fail } from '@/core/response-handling'
+
+import { ResourceNotFoundError, NotAllowedError } from '../../errors'
+
 import { QuestionsRepository } from '../../repositories/questions-repository'
 
-interface EditQuestionRequest {
+interface Input {
 	id: string
 	authorId: string
 	title: string
 	content: string
 }
 
+type Output = ResponseHandling<ResourceNotFoundError | NotAllowedError, void>
+
 export class EditQuestionUseCase {
 	constructor(private readonly questionsRepository: QuestionsRepository) {}
 
-	async execute({
-		id,
-		authorId,
-		title,
-		content,
-	}: EditQuestionRequest): Promise<void> {
+	async execute({ id, authorId, title, content }: Input): Promise<Output> {
 		const question = await this.questionsRepository.findById(id)
 
-		if (!question) throw new Error('Question not found')
+		if (!question) return fail(new ResourceNotFoundError())
 
 		if (question.authorId.id !== authorId) {
-			throw new Error('Only the author can edit the question')
+			return fail(new NotAllowedError())
 		}
 
 		question.title = title
 		question.content = content
 
-		return await this.questionsRepository.editQuestion(question)
+		await this.questionsRepository.editQuestion(question)
+
+		return success()
 	}
 }
