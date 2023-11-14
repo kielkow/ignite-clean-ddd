@@ -1,7 +1,11 @@
+import { Success, Fail } from '@/core/response-handling'
+
 import { makeQuestionComment } from '@/test/factories/make-question-comment'
 import { InMemoryQuestionsCommentsRepository } from '@/test/repositories/in-memory-questions-comments-repository'
 
 import { DeleteQuestionCommentUseCase } from '.'
+
+import { ResourceNotFoundError, NotAllowedError } from '../../errors'
 
 describe('DeleteQuestionCommentByIdUseCase', () => {
 	let inMemoryQuestionsRepository: InMemoryQuestionsCommentsRepository
@@ -17,7 +21,7 @@ describe('DeleteQuestionCommentByIdUseCase', () => {
 
 		await inMemoryQuestionsRepository.create(comment)
 
-		await sut.execute({
+		const result = await sut.execute({
 			id: comment.id,
 			authorId: comment.authorId.id,
 		})
@@ -27,15 +31,20 @@ describe('DeleteQuestionCommentByIdUseCase', () => {
 		)
 
 		expect(questionComment).toBeUndefined()
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 	})
 
 	it('should not be able to delete question comment by ID if it does not exist', async () => {
-		await expect(
-			sut.execute({
-				id: 'invalid_id',
-				authorId: 'any_author_id',
-			}),
-		).rejects.toThrow('Question comment not found')
+		const result = await sut.execute({
+			id: 'invalid_id',
+			authorId: 'any_author_id',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 
 	it('should not be able to delete question comment by ID if user is not the author', async () => {
@@ -43,11 +52,13 @@ describe('DeleteQuestionCommentByIdUseCase', () => {
 
 		await inMemoryQuestionsRepository.create(comment)
 
-		await expect(
-			sut.execute({
-				id: comment.id,
-				authorId: 'invalid_author_id',
-			}),
-		).rejects.toThrow('You are not allowed to delete this question comment')
+		const result = await sut.execute({
+			id: comment.id,
+			authorId: 'invalid_author_id',
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(NotAllowedError) })
 	})
 })

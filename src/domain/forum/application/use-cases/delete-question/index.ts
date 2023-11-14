@@ -1,24 +1,32 @@
+import { ResponseHandling, success, fail } from '@/core/response-handling'
+
+import { ResourceNotFoundError, NotAllowedError } from '../../errors'
+
 import { QuestionsRepository } from '../../repositories/questions-repository'
 
-interface DeleteQuestionRequest {
+interface Input {
 	id: string
 	authorId: string
 }
 
+type Output = ResponseHandling<ResourceNotFoundError | NotAllowedError, void>
+
 export class DeleteQuestionUseCase {
 	constructor(private readonly questionsRepository: QuestionsRepository) {}
 
-	async execute({ id, authorId }: DeleteQuestionRequest): Promise<void> {
+	async execute({ id, authorId }: Input): Promise<Output> {
 		const question = await this.questionsRepository.findById(id)
 
 		if (!question) {
-			throw new Error('Question not found')
+			return fail(new ResourceNotFoundError())
 		}
 
 		if (question.authorId.id !== authorId) {
-			throw new Error('Only the author can delete the question')
+			return fail(new NotAllowedError())
 		}
 
-		return await this.questionsRepository.deleteQuestion(id)
+		await this.questionsRepository.deleteQuestion(id)
+
+		return success()
 	}
 }
