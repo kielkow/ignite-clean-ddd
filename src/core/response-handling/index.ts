@@ -8,6 +8,10 @@ export class Fail<F> {
 	static is(value: any): boolean {
 		return value instanceof Fail
 	}
+
+	getValue(): F | void {
+		return this.error
+	}
 }
 
 export class Success<S> {
@@ -19,6 +23,10 @@ export class Success<S> {
 
 	static is(value: any): boolean {
 		return value instanceof Success
+	}
+
+	getValue(): S | void {
+		return this.value
 	}
 }
 
