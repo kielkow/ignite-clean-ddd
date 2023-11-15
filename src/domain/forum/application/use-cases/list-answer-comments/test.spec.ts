@@ -1,3 +1,5 @@
+import { Fail, Success } from '@/core/response-handling'
+
 import { makeAnswer } from '@/test/factories/make-answer'
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
 import { InMemoryAnswersCommentsRepository } from '@/test/repositories/in-memory-answers-comments-repository'
@@ -5,6 +7,8 @@ import { InMemoryAnswersCommentsRepository } from '@/test/repositories/in-memory
 import { ListAnswerCommentsUseCase } from '.'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeAnswerComment } from '@/test/factories/make-answer-comment'
+
+import { ResourceNotFoundError } from '../../errors'
 
 describe('CommentOnAnswerUseCase', () => {
 	let inMemoryAnswersCommentsRepository: InMemoryAnswersCommentsRepository,
@@ -31,10 +35,18 @@ describe('CommentOnAnswerUseCase', () => {
 			}),
 		)
 
-		const answerComments = await sut.execute(answer.id, {
-			page: 1,
-			perPage: 10,
+		const result = await sut.execute({
+			answerId: answer.id,
+			paginationParams: {
+				page: 1,
+				perPage: 10,
+			},
 		})
+
+		const answerComments = result.getValue()
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 
 		expect(answerComments).toEqual([
 			{
@@ -57,12 +69,17 @@ describe('CommentOnAnswerUseCase', () => {
 	})
 
 	it('should not be able to list comments from answer if answer does not exists', async () => {
-		await expect(
-			sut.execute('non-existing-answer-id', {
+		const result = await sut.execute({
+			answerId: 'non-existing-answer-id',
+			paginationParams: {
 				page: 1,
 				perPage: 10,
-			}),
-		).rejects.toThrow('Answer not found')
+			},
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 
 	it('should be able to list comments from answer with pagination', async () => {
@@ -73,22 +90,34 @@ describe('CommentOnAnswerUseCase', () => {
 				answerId: new UniqueEntityID(answer.id),
 			}),
 		)
-
 		const secondComment = await inMemoryAnswersCommentsRepository.create(
 			makeAnswerComment({
 				answerId: new UniqueEntityID(answer.id),
 			}),
 		)
 
-		const firstPageAnswerComments = await sut.execute(answer.id, {
-			page: 1,
-			perPage: 1,
+		const firstResult = await sut.execute({
+			answerId: answer.id,
+			paginationParams: {
+				page: 1,
+				perPage: 1,
+			},
+		})
+		const secondResult = await sut.execute({
+			answerId: answer.id,
+			paginationParams: {
+				page: 2,
+				perPage: 1,
+			},
 		})
 
-		const secondPageAnswerComments = await sut.execute(answer.id, {
-			page: 2,
-			perPage: 1,
-		})
+		const firstPageAnswerComments = firstResult.getValue()
+		const secondPageAnswerComments = secondResult.getValue()
+
+		expect(Success.is(firstResult)).toBe(true)
+		expect(firstResult).toBeInstanceOf(Success)
+		expect(Success.is(secondResult)).toBe(true)
+		expect(secondResult).toBeInstanceOf(Success)
 
 		expect(firstPageAnswerComments).toEqual([
 			{
@@ -108,7 +137,6 @@ describe('CommentOnAnswerUseCase', () => {
 				_updatedAt: undefined,
 			},
 		])
-
 		expect(secondPageAnswerComments).toEqual([
 			{
 				_uniqueEnityId: {

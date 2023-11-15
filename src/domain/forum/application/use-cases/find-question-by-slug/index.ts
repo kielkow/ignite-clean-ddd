@@ -1,17 +1,27 @@
+import { ResponseHandling, success, fail } from '@/core/response-handling'
+
 import { Question } from '@/domain/forum/enterprise/entities/question'
 
 import { QuestionsRepository } from '../../repositories/questions-repository'
 
+import { ResourceNotFoundError } from '../../errors'
+
+interface Input {
+	slug: string
+}
+
+type Output = ResponseHandling<ResourceNotFoundError, Question>
+
 export class FindQuestionBySlugUseCase {
 	constructor(private readonly questionsRepository: QuestionsRepository) {}
 
-	async execute(slug: string): Promise<Question> {
+	async execute({ slug }: Input): Promise<Output> {
 		const question = await this.questionsRepository.findBySlug(slug)
 
 		if (!question) {
-			throw new Error('Question not found')
+			return fail(new ResourceNotFoundError())
 		}
 
-		return question
+		return success(question)
 	}
 }
