@@ -1,3 +1,5 @@
+import { ResponseHandling, fail, success } from '@/core/response-handling'
+
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
@@ -5,18 +7,26 @@ import { QuestionComment } from '@/domain/forum/enterprise/entities/question-com
 import { QuestionsRepository } from '../../repositories/questions-repository'
 import { QuestionsCommentsRepository } from '../../repositories/questions-comments-repository'
 
+import { ResourceNotFoundError } from '../../errors'
+
+interface Input {
+	questionId: string
+	paginationParams: PaginationParams
+}
+
+type Output = ResponseHandling<ResourceNotFoundError, QuestionComment[]>
+
 export class ListQuestionCommentsUseCase {
 	constructor(
 		private questionsRepository: QuestionsRepository,
 		private readonly questionCommentRepository: QuestionsCommentsRepository,
 	) {}
 
-	async execute(
-		questionId: string,
-		{ page = 1, perPage = 10 }: PaginationParams,
-	): Promise<QuestionComment[]> {
+	async execute({ questionId, paginationParams }: Input): Promise<Output> {
+		const { page = 1, perPage = 10 } = paginationParams
+
 		const question = await this.questionsRepository.findById(questionId)
-		if (!question) throw new Error('Question not found')
+		if (!question) return fail(new ResourceNotFoundError())
 
 		const questionComments = await this.questionCommentRepository.findAll({
 			questionId,
@@ -24,6 +34,6 @@ export class ListQuestionCommentsUseCase {
 			perPage,
 		})
 
-		return questionComments
+		return success(questionComments)
 	}
 }

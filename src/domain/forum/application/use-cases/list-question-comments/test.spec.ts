@@ -1,10 +1,14 @@
+import { Fail, Success } from '@/core/response-handling'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
 import { makeQuestion } from '@/test/factories/make-question'
+import { makeQuestionComment } from '@/test/factories/make-question-comment'
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 import { InMemoryQuestionsCommentsRepository } from '@/test/repositories/in-memory-questions-comments-repository'
 
+import { ResourceNotFoundError } from '../../errors'
+
 import { ListQuestionCommentsUseCase } from '.'
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { makeQuestionComment } from '@/test/factories/make-question-comment'
 
 describe('CommentOnQuestionUseCase', () => {
 	let inMemoryQuestionsCommentsRepository: InMemoryQuestionsCommentsRepository,
@@ -34,11 +38,17 @@ describe('CommentOnQuestionUseCase', () => {
 			}),
 		)
 
-		const questionComments = await sut.execute(question.id, {
-			page: 1,
-			perPage: 10,
+		const result = await sut.execute({
+			questionId: question.id,
+			paginationParams: {
+				page: 1,
+				perPage: 10,
+			},
 		})
+		const questionComments = result.getValue()
 
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
 		expect(questionComments).toEqual([
 			{
 				_uniqueEnityId: {
@@ -60,12 +70,17 @@ describe('CommentOnQuestionUseCase', () => {
 	})
 
 	it('should not be able to list comments from question if question does not exists', async () => {
-		await expect(
-			sut.execute('non-existing-question-id', {
+		const result = await sut.execute({
+			questionId: 'non-existing-question-id',
+			paginationParams: {
 				page: 1,
 				perPage: 10,
-			}),
-		).rejects.toThrow('Question not found')
+			},
+		})
+
+		expect(Fail.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Fail)
+		expect(result).toEqual({ error: expect.any(ResourceNotFoundError) })
 	})
 
 	it('should be able to list comments from question with pagination', async () => {
@@ -78,22 +93,34 @@ describe('CommentOnQuestionUseCase', () => {
 				questionId: new UniqueEntityID(question.id),
 			}),
 		)
-
 		const secondComment = await inMemoryQuestionsCommentsRepository.create(
 			makeQuestionComment({
 				questionId: new UniqueEntityID(question.id),
 			}),
 		)
 
-		const firstPageQuestionComments = await sut.execute(question.id, {
-			page: 1,
-			perPage: 1,
+		const firstResult = await sut.execute({
+			questionId: question.id,
+			paginationParams: {
+				page: 1,
+				perPage: 1,
+			},
+		})
+		const secondResult = await sut.execute({
+			questionId: question.id,
+			paginationParams: {
+				page: 2,
+				perPage: 1,
+			},
 		})
 
-		const secondPageQuestionComments = await sut.execute(question.id, {
-			page: 2,
-			perPage: 1,
-		})
+		const firstPageQuestionComments = firstResult.getValue()
+		const secondPageQuestionComments = secondResult.getValue()
+
+		expect(Success.is(firstResult)).toBe(true)
+		expect(firstResult).toBeInstanceOf(Success)
+		expect(Success.is(secondResult)).toBe(true)
+		expect(secondResult).toBeInstanceOf(Success)
 
 		expect(firstPageQuestionComments).toEqual([
 			{
@@ -113,7 +140,6 @@ describe('CommentOnQuestionUseCase', () => {
 				_updatedAt: undefined,
 			},
 		])
-
 		expect(secondPageQuestionComments).toEqual([
 			{
 				_uniqueEnityId: {
