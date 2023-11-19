@@ -22,4 +22,21 @@ describe('AnswerQuestionUseCase', () => {
 
 		expect(Success.is(result)).toBeTruthy()
 	})
+
+	it('should be able to create an answer with attachments', async () => {
+		const result = await sut.execute({
+			authorId: '1',
+			questionId: '1',
+			content: 'This is the answer',
+			attachmentsIds: ['1', '2', '3'],
+		})
+
+		const answer = result.getValue()
+
+		expect(Success.is(result)).toBe(true)
+		expect(result).toBeInstanceOf(Success)
+
+		expect(answer).toHaveProperty('attachments')
+		expect(answer?.attachments).toHaveLength(3)
+	})
 })
