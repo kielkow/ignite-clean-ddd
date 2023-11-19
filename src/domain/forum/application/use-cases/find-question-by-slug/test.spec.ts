@@ -40,6 +40,7 @@ describe('FindQuestionBySlugUseCase', () => {
 				slug: {
 					value: 'this-is-the-title',
 				},
+				attachments: [],
 			},
 			_createdAt: expect.any(Date),
 			_updatedAt: undefined,

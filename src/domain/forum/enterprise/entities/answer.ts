@@ -1,10 +1,14 @@
+import { Optional } from '@/core/types/optional'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
+import { AnswerAttachment } from './answer-attachment'
 
 export interface AnswerProps {
 	content: string
 	questionId: UniqueEntityID
 	authorId: UniqueEntityID
+	attachments: AnswerAttachment[]
 }
 
 export class Answer extends AggregateRoot<AnswerProps> {
@@ -20,6 +24,10 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		return this.props.authorId
 	}
 
+	get attachments() {
+		return this.props.attachments
+	}
+
 	get except() {
 		return this.props.content.substring(0, 120).trimEnd().concat('...')
 	}
@@ -33,8 +41,14 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		this.updatedAt = new Date()
 	}
 
-	static create(props: AnswerProps, id?: UniqueEntityID) {
-		const answer = new Answer(props, id)
+	static create(
+		props: Optional<AnswerProps, 'attachments'>,
+		id?: UniqueEntityID,
+	) {
+		const answer = new Answer(
+			{ ...props, attachments: props.attachments ?? [] },
+			id,
+		)
 		return answer
 	}
 }
