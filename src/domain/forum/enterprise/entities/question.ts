@@ -71,6 +71,16 @@ export class Question extends AggregateRoot<QuestionProps> {
 		this.touch()
 	}
 
+	set difficulty(value: 'easy' | 'medium' | 'hard') {
+		this.props.difficulty = value
+		this.touch()
+	}
+
+	set attachments(value: QuestionAttachment[]) {
+		this.props.attachments = value
+		this.touch()
+	}
+
 	private touch() {
 		this.updatedAt = new Date()
 	}

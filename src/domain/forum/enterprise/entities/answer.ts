@@ -37,6 +37,11 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		this.touch()
 	}
 
+	set attachments(value: AnswerAttachment[]) {
+		this.props.attachments = value
+		this.touch()
+	}
+
 	private touch() {
 		this.updatedAt = new Date()
 	}
