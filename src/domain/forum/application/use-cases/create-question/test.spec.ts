@@ -38,6 +38,6 @@ describe('CreateQuestionUseCase', () => {
 		expect(result).toBeInstanceOf(Success)
 
 		expect(question).toHaveProperty('attachments')
-		expect(question?.attachments).toHaveLength(3)
+		expect(question?.attachments.getItems()).toHaveLength(3)
 	})
 })

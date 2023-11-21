@@ -5,7 +5,7 @@ import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Slug } from './value-objects/slug'
-import { QuestionAttachment } from './question-attachment'
+import { QuestionAttachmentList } from './question-attachment-list'
 
 export interface QuestionProps {
 	title: string
@@ -14,7 +14,7 @@ export interface QuestionProps {
 	difficulty: 'easy' | 'medium' | 'hard'
 	authorId: UniqueEntityID
 	bestAnswerId?: UniqueEntityID
-	attachments: QuestionAttachment[]
+	attachments: QuestionAttachmentList
 }
 
 export class Question extends AggregateRoot<QuestionProps> {
@@ -76,8 +76,9 @@ export class Question extends AggregateRoot<QuestionProps> {
 		this.touch()
 	}
 
-	set attachments(value: QuestionAttachment[]) {
+	set attachments(value: QuestionAttachmentList) {
 		this.props.attachments = value
+
 		this.touch()
 	}
 
@@ -95,7 +96,7 @@ export class Question extends AggregateRoot<QuestionProps> {
 				...props,
 				difficulty: props.difficulty ?? 'medium',
 				slug: props.slug ?? Slug.createFromText(props.title),
-				attachments: props.attachments ?? [],
+				attachments: props.attachments ?? QuestionAttachmentList.create(),
 			},
 			id,
 			createdAt,

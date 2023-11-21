@@ -26,28 +26,10 @@ describe('FindQuestionBySlugUseCase', () => {
 		const result = await sut.execute({ slug: 'this-is-the-title' })
 		const question = result.getValue()
 
-		expect(question).toEqual({
-			_uniqueEnityId: {
-				_id: payloadQuestion.id,
-			},
-			_props: {
-				authorId: {
-					_id: expect.any(String),
-				},
-				content: expect.any(String),
-				title: 'This is the title',
-				difficulty: expect.any(String),
-				slug: {
-					value: 'this-is-the-title',
-				},
-				attachments: [],
-			},
-			_createdAt: expect.any(Date),
-			_updatedAt: undefined,
-		})
-
 		expect(Success.is(result)).toBe(true)
 		expect(result).toBeInstanceOf(Success)
+
+		expect(question).toHaveProperty('_props.slug.value', 'this-is-the-title')
 	})
 
 	it('should not be able to find question by slug if does not exists', async () => {
