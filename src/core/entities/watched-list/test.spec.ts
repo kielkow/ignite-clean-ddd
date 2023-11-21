@@ -101,4 +101,14 @@ describe('WatchedList', () => {
 		expect(list.getNewItems()).toEqual([])
 		expect(list.getRemovedItems()).toEqual([])
 	})
+
+	test('should update watched list', () => {
+		const list = new TestWatchedList([1, 2, 3])
+
+		list.update([1, 2, 4])
+
+		expect(list.getItems()).toEqual([1, 2, 4])
+		expect(list.getNewItems()).toEqual([4])
+		expect(list.getRemovedItems()).toEqual([3])
+	})
 })
