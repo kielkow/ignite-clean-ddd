@@ -2,10 +2,12 @@ import { Success } from '@/core/response-handling'
 
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
+import { makeAnswer } from '@/test/factories/make-answer'
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
 
+import { AnswerAttachmentList } from '@/domain/forum/enterprise/entities/answer-attachment-list'
+
 import { FindAnswersByQuestionIDUseCase } from '.'
-import { makeAnswer } from '@/test/factories/make-answer'
 
 describe('FindAnswersByQuestionIDUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository
@@ -50,7 +52,7 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 						_id: '1',
 					},
 					content: firstAnswerPayload.content,
-					attachments: [],
+					attachments: expect.any(AnswerAttachmentList),
 				},
 				_createdAt: expect.any(Date),
 				_updatedAt: undefined,
@@ -67,7 +69,7 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 						_id: '1',
 					},
 					content: secondAnswerPayload.content,
-					attachments: [],
+					attachments: expect.any(AnswerAttachmentList),
 				},
 				_createdAt: expect.any(Date),
 				_updatedAt: undefined,

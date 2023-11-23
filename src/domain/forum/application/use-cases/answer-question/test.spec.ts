@@ -37,6 +37,6 @@ describe('AnswerQuestionUseCase', () => {
 		expect(result).toBeInstanceOf(Success)
 
 		expect(answer).toHaveProperty('attachments')
-		expect(answer?.attachments).toHaveLength(3)
+		expect(answer?.attachments.getItems()).toHaveLength(3)
 	})
 })

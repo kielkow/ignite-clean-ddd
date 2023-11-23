@@ -2,13 +2,13 @@ import { Optional } from '@/core/types/optional'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-import { AnswerAttachment } from './answer-attachment'
+import { AnswerAttachmentList } from './answer-attachment-list'
 
 export interface AnswerProps {
 	content: string
 	questionId: UniqueEntityID
 	authorId: UniqueEntityID
-	attachments: AnswerAttachment[]
+	attachments: AnswerAttachmentList
 }
 
 export class Answer extends AggregateRoot<AnswerProps> {
@@ -37,7 +37,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		this.touch()
 	}
 
-	set attachments(value: AnswerAttachment[]) {
+	set attachments(value: AnswerAttachmentList) {
 		this.props.attachments = value
 		this.touch()
 	}
@@ -51,7 +51,10 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		id?: UniqueEntityID,
 	) {
 		const answer = new Answer(
-			{ ...props, attachments: props.attachments ?? [] },
+			{
+				...props,
+				attachments: props.attachments ?? AnswerAttachmentList.create(),
+			},
 			id,
 		)
 		return answer

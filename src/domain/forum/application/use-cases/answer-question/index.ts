@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { ResponseHandling, success } from '@/core/response-handling'
 
 import { AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-attachment'
+import { AnswerAttachmentList } from '@/domain/forum/enterprise/entities/answer-attachment-list'
 
 import { AnswersRepository } from '../../repositories/answers-repository'
 
@@ -44,7 +45,7 @@ export class AnswerQuestionUseCase {
 				})
 			})
 
-			answer.attachments = answerAttachments
+			answer.attachments = AnswerAttachmentList.create(answerAttachments)
 		}
 
 		const result = await this.answersRepository.createAnswer(answer)
