@@ -1,10 +1,15 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
-import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
 import { Question } from '@/domain/forum/enterprise/entities/question'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
+import { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
 	private questions: Question[] = []
+
+	constructor(
+		private questionAttachmentsRepository?: QuestionAttachmentsRepository,
+	) {}
 
 	async createQuestion(question: Question): Promise<Question> {
 		this.questions.push(question)
@@ -21,6 +26,12 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
 	async deleteQuestion(id: string): Promise<void> {
 		this.questions = this.questions.filter((question) => question.id !== id)
+
+		if (!this.questionAttachmentsRepository) {
+			throw new Error('Question attachments repository must be provided')
+		}
+
+		await this.questionAttachmentsRepository.deleteByQuestionId(id)
 	}
 
 	async editQuestion(question: Question): Promise<void> {

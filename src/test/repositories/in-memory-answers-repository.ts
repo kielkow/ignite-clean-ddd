@@ -1,8 +1,13 @@
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
+import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository'
 
 export class InMemoryAnswersRepository implements AnswersRepository {
 	private answers: Answer[] = []
+
+	constructor(
+		private answerAttachmentsRepository?: AnswerAttachmentsRepository,
+	) {}
 
 	async createAnswer(answer: Answer): Promise<Answer> {
 		this.answers.push(answer)
@@ -20,6 +25,12 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 	async deleteAnswer(id: string): Promise<void> {
 		const index = this.answers.findIndex((answer) => answer.id === id)
 		this.answers.splice(index, 1)
+
+		if (!this.answerAttachmentsRepository) {
+			throw new Error('Answer attachments repository must be provided')
+		}
+
+		await this.answerAttachmentsRepository.deleteByAnswerId(id)
 	}
 
 	async editAnswer(answer: Answer): Promise<void> {

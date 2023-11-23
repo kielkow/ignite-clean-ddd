@@ -2,17 +2,25 @@ import { Success, Fail } from '@/core/response-handling'
 
 import { makeQuestion } from '@/test/factories/make-question'
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
+import { InMemoryQuestionAttachmentsRepository } from '@/test/repositories/in-memory-question-attachments-repository'
 
 import { NotAllowedError, ResourceNotFoundError } from '../../errors'
 
 import { DeleteQuestionUseCase } from '.'
 
 describe('DeleteQuestionUseCase', () => {
-	let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+	let inMemoryQuestionsRepository: InMemoryQuestionsRepository,
+		inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
+
 	let sut: DeleteQuestionUseCase
 
 	beforeEach(() => {
-		inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+		inMemoryQuestionAttachmentsRepository =
+			new InMemoryQuestionAttachmentsRepository()
+		inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+			inMemoryQuestionAttachmentsRepository,
+		)
+
 		sut = new DeleteQuestionUseCase(inMemoryQuestionsRepository)
 	})
 

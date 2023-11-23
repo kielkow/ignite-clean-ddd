@@ -2,17 +2,25 @@ import { Fail, Success } from '@/core/response-handling'
 
 import { makeAnswer } from '@/test/factories/make-answer'
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
+import { InMemoryAnswerAttachmentsRepository } from '@/test/repositories/in-memory-answer-attachments-repository'
 
 import { DeleteAnswerUseCase } from '.'
 
 import { NotAllowedError, ResourceNotFoundError } from '../../errors'
 
 describe('DeleteAnswerUseCase', () => {
-	let inMemoryAnswersRepository: InMemoryAnswersRepository
+	let inMemoryAnswersRepository: InMemoryAnswersRepository,
+		inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
+
 	let sut: DeleteAnswerUseCase
 
 	beforeEach(() => {
-		inMemoryAnswersRepository = new InMemoryAnswersRepository()
+		inMemoryAnswerAttachmentsRepository =
+			new InMemoryAnswerAttachmentsRepository()
+		inMemoryAnswersRepository = new InMemoryAnswersRepository(
+			inMemoryAnswerAttachmentsRepository,
+		)
+
 		sut = new DeleteAnswerUseCase(inMemoryAnswersRepository)
 	})
 
