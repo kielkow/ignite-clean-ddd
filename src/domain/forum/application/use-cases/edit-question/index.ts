@@ -7,10 +7,7 @@ import { QuestionAttachmentList } from '@/domain/forum/enterprise/entities/quest
 import { QuestionsRepository } from '../../repositories/questions-repository'
 import { QuestionAttachmentsRepository } from '../../repositories/question-attachments-repository'
 
-import {
-	ResourceNotFoundError,
-	NotAllowedError,
-} from '@/core/errors'
+import { ResourceNotFoundError, NotAllowedError } from '@/core/errors'
 
 interface Input {
 	id: string

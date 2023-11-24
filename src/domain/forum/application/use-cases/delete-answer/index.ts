@@ -1,9 +1,6 @@
 import { ResponseHandling, fail, success } from '@/core/response-handling'
 
-import {
-	NotAllowedError,
-	ResourceNotFoundError,
-} from '@/core/errors'
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 
 import { AnswersRepository } from '../../repositories/answers-repository'
 
