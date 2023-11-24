@@ -4,7 +4,10 @@ import { makeQuestion } from '@/test/factories/make-question'
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 import { InMemoryQuestionAttachmentsRepository } from '@/test/repositories/in-memory-question-attachments-repository'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../../../../core/errors'
+import {
+	NotAllowedError,
+	ResourceNotFoundError,
+} from '../../../../../core/errors'
 
 import { DeleteQuestionUseCase } from '.'
 

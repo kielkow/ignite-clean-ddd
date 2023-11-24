@@ -1,6 +1,9 @@
 import { ResponseHandling, fail, success } from '@/core/response-handling'
 import { AnswersCommentsRepository } from '../../repositories/answers-comments-repository'
-import { NotAllowedError, ResourceNotFoundError } from '../../../../../core/errors'
+import {
+	NotAllowedError,
+	ResourceNotFoundError,
+} from '../../../../../core/errors'
 
 interface Input {
 	id: string

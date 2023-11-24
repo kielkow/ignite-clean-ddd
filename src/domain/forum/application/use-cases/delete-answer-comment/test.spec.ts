@@ -4,7 +4,10 @@ import { InMemoryAnswersCommentsRepository } from '@/test/repositories/in-memory
 
 import { DeleteAnswerCommentUseCase } from '.'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../../../../core/errors'
+import {
+	NotAllowedError,
+	ResourceNotFoundError,
+} from '../../../../../core/errors'
 
 describe('DeleteAnswerCommentByIdUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersCommentsRepository

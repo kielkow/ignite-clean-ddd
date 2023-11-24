@@ -6,7 +6,10 @@ import { InMemoryAnswerAttachmentsRepository } from '@/test/repositories/in-memo
 
 import { DeleteAnswerUseCase } from '.'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../../../../core/errors'
+import {
+	NotAllowedError,
+	ResourceNotFoundError,
+} from '../../../../../core/errors'
 
 describe('DeleteAnswerUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository,
