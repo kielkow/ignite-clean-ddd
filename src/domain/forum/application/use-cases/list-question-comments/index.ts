@@ -7,7 +7,7 @@ import { QuestionComment } from '@/domain/forum/enterprise/entities/question-com
 import { QuestionsRepository } from '../../repositories/questions-repository'
 import { QuestionsCommentsRepository } from '../../repositories/questions-comments-repository'
 
-import { ResourceNotFoundError } from '../../errors'
+import { ResourceNotFoundError } from '../../../../../core/errors'
 
 interface Input {
 	questionId: string

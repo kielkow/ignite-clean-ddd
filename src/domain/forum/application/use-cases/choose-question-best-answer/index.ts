@@ -4,7 +4,10 @@ import { ResponseHandling, fail, success } from '@/core/response-handling'
 import { AnswersRepository } from '../../repositories/answers-repository'
 import { QuestionsRepository } from '../../repositories/questions-repository'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../errors'
+import {
+	NotAllowedError,
+	ResourceNotFoundError,
+} from '../../../../../core/errors'
 
 interface Input {
 	authorId: string

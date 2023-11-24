@@ -7,7 +7,7 @@ import { InMemoryQuestionAttachmentsRepository } from '@/test/repositories/in-me
 
 import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../errors'
+import { NotAllowedError, ResourceNotFoundError } from '../../../../../core/errors'
 
 import { EditQuestionUseCase } from '.'
 

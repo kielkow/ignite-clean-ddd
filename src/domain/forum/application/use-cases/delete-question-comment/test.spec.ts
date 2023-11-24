@@ -5,7 +5,7 @@ import { InMemoryQuestionsCommentsRepository } from '@/test/repositories/in-memo
 
 import { DeleteQuestionCommentUseCase } from '.'
 
-import { ResourceNotFoundError, NotAllowedError } from '../../errors'
+import { ResourceNotFoundError, NotAllowedError } from '../../../../../core/errors'
 
 describe('DeleteQuestionCommentByIdUseCase', () => {
 	let inMemoryQuestionsRepository: InMemoryQuestionsCommentsRepository

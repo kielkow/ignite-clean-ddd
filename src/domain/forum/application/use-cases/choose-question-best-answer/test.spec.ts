@@ -9,7 +9,10 @@ import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-quest
 
 import { ChooseQuestionBestAnswerUseCase } from '.'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../errors'
+import {
+	NotAllowedError,
+	ResourceNotFoundError,
+} from '../../../../../core/errors'
 
 describe('ChooseQuestionBestAnswerUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository

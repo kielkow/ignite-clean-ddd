@@ -1,9 +1,6 @@
 import { ResponseHandling, fail, success } from '@/core/response-handling'
 
-import {
-	NotAllowedError,
-	ResourceNotFoundError,
-} from '@/domain/forum/application/errors'
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 
 import { NotificationsRepository } from '../../repositories/notifications-repository'
 

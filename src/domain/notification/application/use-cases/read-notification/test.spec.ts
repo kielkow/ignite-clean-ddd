@@ -1,9 +1,6 @@
 import { Fail, Success } from '@/core/response-handling'
 
-import {
-	NotAllowedError,
-	ResourceNotFoundError,
-} from '@/domain/forum/application/errors'
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 
 import { makeNotification } from '@/test/factories/make-notification'
 import { InMemoryNotificationsRepository } from '@/test/repositories/in-memory-notifications-repository'

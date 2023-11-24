@@ -6,7 +6,7 @@ import { InMemoryQuestionsCommentsRepository } from '@/test/repositories/in-memo
 
 import { CommentOnQuestionUseCase } from '.'
 
-import { ResourceNotFoundError } from '../../errors'
+import { ResourceNotFoundError } from '../../../../../core/errors'
 
 describe('CommentOnQuestionUseCase', () => {
 	let inMemoryQuestionsCommentsRepository: InMemoryQuestionsCommentsRepository,

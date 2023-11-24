@@ -7,7 +7,7 @@ import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment
 import { AnswersRepository } from '../../repositories/answers-repository'
 import { AnswersCommentsRepository } from '../../repositories/answers-comments-repository'
 
-import { ResourceNotFoundError } from '../../errors'
+import { ResourceNotFoundError } from '../../../../../core/errors'
 
 interface Input {
 	answerId: string

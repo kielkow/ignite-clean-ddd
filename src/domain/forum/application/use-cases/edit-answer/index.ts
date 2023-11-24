@@ -4,7 +4,7 @@ import { ResponseHandling, success, fail } from '@/core/response-handling'
 import { AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-attachment'
 import { AnswerAttachmentList } from '@/domain/forum/enterprise/entities/answer-attachment-list'
 
-import { ResourceNotFoundError, NotAllowedError } from '../../errors'
+import { ResourceNotFoundError, NotAllowedError } from '../../../../../core/errors'
 
 import { AnswersRepository } from '../../repositories/answers-repository'
 import { AnswerAttachmentsRepository } from '../../repositories/answer-attachments-repository'

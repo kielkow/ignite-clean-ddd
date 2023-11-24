@@ -7,7 +7,7 @@ import { makeAnswer } from '@/test/factories/make-answer'
 import { InMemoryAnswersRepository } from '@/test/repositories/in-memory-answers-repository'
 import { InMemoryAnswerAttachmentsRepository } from '@/test/repositories/in-memory-answer-attachments-repository'
 
-import { NotAllowedError, ResourceNotFoundError } from '../../errors'
+import { NotAllowedError, ResourceNotFoundError } from '../../../../../core/errors'
 
 import { EditAnswerUseCase } from '.'
 
