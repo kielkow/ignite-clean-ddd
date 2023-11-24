@@ -3,7 +3,7 @@ import { ResponseHandling, fail, success } from '@/core/response-handling'
 import {
 	NotAllowedError,
 	ResourceNotFoundError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 import { AnswersRepository } from '../../repositories/answers-repository'
 

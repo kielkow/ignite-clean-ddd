@@ -8,7 +8,7 @@ import { ListAnswerCommentsUseCase } from '.'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeAnswerComment } from '@/test/factories/make-answer-comment'
 
-import { ResourceNotFoundError } from '../../../../../core/errors'
+import { ResourceNotFoundError } from '@/core/errors'
 
 describe('CommentOnAnswerUseCase', () => {
 	let inMemoryAnswersCommentsRepository: InMemoryAnswersCommentsRepository,

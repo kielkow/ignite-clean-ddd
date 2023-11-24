@@ -9,7 +9,7 @@ import { DeleteAnswerUseCase } from '.'
 import {
 	NotAllowedError,
 	ResourceNotFoundError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 describe('DeleteAnswerUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersRepository,

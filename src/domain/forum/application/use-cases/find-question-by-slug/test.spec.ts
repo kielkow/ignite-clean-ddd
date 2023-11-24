@@ -5,7 +5,7 @@ import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-quest
 
 import { FindQuestionBySlugUseCase } from '.'
 
-import { ResourceNotFoundError } from '../../../../../core/errors'
+import { ResourceNotFoundError } from '@/core/errors'
 
 describe('FindQuestionBySlugUseCase', () => {
 	let inMemoryQuestionsRepository: InMemoryQuestionsRepository

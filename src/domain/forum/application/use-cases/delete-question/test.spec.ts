@@ -7,7 +7,7 @@ import { InMemoryQuestionAttachmentsRepository } from '@/test/repositories/in-me
 import {
 	NotAllowedError,
 	ResourceNotFoundError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 import { DeleteQuestionUseCase } from '.'
 

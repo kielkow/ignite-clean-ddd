@@ -7,7 +7,7 @@ import { DeleteAnswerCommentUseCase } from '.'
 import {
 	NotAllowedError,
 	ResourceNotFoundError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 describe('DeleteAnswerCommentByIdUseCase', () => {
 	let inMemoryAnswersRepository: InMemoryAnswersCommentsRepository

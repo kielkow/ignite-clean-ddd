@@ -10,7 +10,7 @@ import { QuestionAttachmentsRepository } from '../../repositories/question-attac
 import {
 	ResourceNotFoundError,
 	NotAllowedError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 interface Input {
 	id: string

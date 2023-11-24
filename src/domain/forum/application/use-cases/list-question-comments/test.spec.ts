@@ -6,7 +6,7 @@ import { makeQuestionComment } from '@/test/factories/make-question-comment'
 import { InMemoryQuestionsRepository } from '@/test/repositories/in-memory-questions-repository'
 import { InMemoryQuestionsCommentsRepository } from '@/test/repositories/in-memory-questions-comments-repository'
 
-import { ResourceNotFoundError } from '../../../../../core/errors'
+import { ResourceNotFoundError } from '@/core/errors'
 
 import { ListQuestionCommentsUseCase } from '.'
 

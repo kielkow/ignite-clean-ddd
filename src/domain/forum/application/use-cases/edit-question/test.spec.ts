@@ -10,7 +10,7 @@ import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-
 import {
 	NotAllowedError,
 	ResourceNotFoundError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 import { EditQuestionUseCase } from '.'
 

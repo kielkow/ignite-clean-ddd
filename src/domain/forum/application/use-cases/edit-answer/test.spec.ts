@@ -10,7 +10,7 @@ import { InMemoryAnswerAttachmentsRepository } from '@/test/repositories/in-memo
 import {
 	NotAllowedError,
 	ResourceNotFoundError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 import { EditAnswerUseCase } from '.'
 

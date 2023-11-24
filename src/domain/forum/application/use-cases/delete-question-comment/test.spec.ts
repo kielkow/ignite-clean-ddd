@@ -8,7 +8,7 @@ import { DeleteQuestionCommentUseCase } from '.'
 import {
 	ResourceNotFoundError,
 	NotAllowedError,
-} from '../../../../../core/errors'
+} from '@/core/errors'
 
 describe('DeleteQuestionCommentByIdUseCase', () => {
 	let inMemoryQuestionsRepository: InMemoryQuestionsCommentsRepository

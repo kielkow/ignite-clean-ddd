@@ -6,7 +6,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { AnswersRepository } from '../../repositories/answers-repository'
 import { AnswersCommentsRepository } from '../../repositories/answers-comments-repository'
 
-import { ResourceNotFoundError } from '../../../../../core/errors'
+import { ResourceNotFoundError } from '@/core/errors'
 
 interface Input {
 	answerId: string
