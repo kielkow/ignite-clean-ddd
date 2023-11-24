@@ -1,7 +1,7 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-interface NotificationProps {
+export interface NotificationProps {
 	recipientId: UniqueEntityID
 	title: string
 	content: string
@@ -23,6 +23,10 @@ export class Notification extends Entity<NotificationProps> {
 
 	get read(): boolean {
 		return this.props.read
+	}
+
+	set read(read: boolean) {
+		this.props.read = read
 	}
 
 	public static create(
