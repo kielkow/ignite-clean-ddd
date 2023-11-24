@@ -13,7 +13,7 @@ export function makeNotification(
 	return Notification.create(
 		{
 			recipientId: new UniqueEntityID(),
-			title: faker.lorem.text(),
+			title: faker.lorem.sentence(),
 			content: faker.lorem.text(),
 			read: false,
 			...props,
