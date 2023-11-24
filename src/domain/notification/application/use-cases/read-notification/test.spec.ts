@@ -26,8 +26,16 @@ describe('SendNotificationUseCase', () => {
 			recipientId: notification.recipientId.id,
 		})
 
+		const updatedNotification = await inMemoryNotificationsRepository.findById(
+			notification.id,
+		)
+
 		expect(Success.is(result)).toBe(true)
 		expect(result).toBeInstanceOf(Success)
+
+		expect(updatedNotification).toBeDefined()
+		expect(updatedNotification?.read).toBe(true)
+		expect(updatedNotification?.readAt).toBeDefined()
 	})
 
 	it('should not be able to read an notification that does not exist', async () => {

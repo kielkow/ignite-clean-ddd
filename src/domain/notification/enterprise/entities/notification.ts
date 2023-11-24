@@ -6,6 +6,7 @@ export interface NotificationProps {
 	title: string
 	content: string
 	read: boolean
+	readAt?: Date
 }
 
 export class Notification extends Entity<NotificationProps> {
@@ -25,8 +26,22 @@ export class Notification extends Entity<NotificationProps> {
 		return this.props.read
 	}
 
+	get readAt(): Date | undefined {
+		return this.props.readAt
+	}
+
 	set read(read: boolean) {
 		this.props.read = read
+
+		if (read) {
+			this.props.readAt = new Date()
+		}
+
+		this.touch()
+	}
+
+	private touch() {
+		this.updatedAt = new Date()
 	}
 
 	public static create(
