@@ -43,4 +43,20 @@ export abstract class Entity<Props> {
 
 		this._updatedAt = undefined
 	}
+
+	public equals(object?: Entity<Props>): boolean {
+		if (object === null || object === undefined) {
+			return false
+		}
+
+		if (this === object) {
+			return true
+		}
+
+		if (!(object instanceof Entity)) {
+			return false
+		}
+
+		return this._uniqueEnityId === object._uniqueEnityId
+	}
 }
