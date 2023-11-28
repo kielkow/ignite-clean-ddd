@@ -3,5 +3,5 @@
 
 sudo npm run format:eslint
 sudo npm run build
-# sudo npm run test
+sudo npm run test
 # sudo npm run test:e2e

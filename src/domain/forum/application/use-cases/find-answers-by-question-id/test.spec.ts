@@ -56,6 +56,7 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 				},
 				_createdAt: expect.any(Date),
 				_updatedAt: undefined,
+				_domainEvents: [],
 			},
 			{
 				_uniqueEnityId: {
@@ -73,6 +74,7 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 				},
 				_createdAt: expect.any(Date),
 				_updatedAt: undefined,
+				_domainEvents: [],
 			},
 		])
 	})
