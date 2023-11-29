@@ -1,3 +1,6 @@
+import { DomainEvents } from '@/core/events/domain-events'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository'
@@ -11,6 +14,11 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 
 	async createAnswer(answer: Answer): Promise<Answer> {
 		this.answers.push(answer)
+
+		DomainEvents.dispatchPublisherEventsForAggregate(
+			new UniqueEntityID(answer.id),
+		)
+
 		return answer
 	}
 
@@ -36,6 +44,10 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 	async editAnswer(answer: Answer): Promise<void> {
 		const index = this.answers.findIndex((a) => a.id === answer.id)
 		this.answers[index] = answer
+
+		DomainEvents.dispatchPublisherEventsForAggregate(
+			new UniqueEntityID(answer.id),
+		)
 	}
 
 	async listQuetionAnswers(params: {
