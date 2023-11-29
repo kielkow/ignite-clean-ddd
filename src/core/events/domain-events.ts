@@ -1,81 +1,79 @@
+import { DomainEvent } from './domain-event'
 import { AggregateRoot } from '../entities/aggregate-root'
 import { UniqueEntityID } from '../entities/unique-entity-id'
-import { DomainEvent } from './domain-event'
 
 type DomainEventCallback = (event: any) => void
 
 export class DomainEvents {
-	private static handlersMap: Record<string, DomainEventCallback[]> = {}
-	private static markedAggregates: AggregateRoot<any>[] = []
+	private static subscribers: Record<string, DomainEventCallback[]> = {}
+	private static publishers: AggregateRoot<any>[] = []
 
-	public static markAggregateForDispatch(aggregate: AggregateRoot<any>) {
-		const aggregateFound = !!this.findMarkedAggregateByID(
+	public static registerPublisher(aggregate: AggregateRoot<any>) {
+		const aggregateFound = !!this.findPublisherByID(
 			new UniqueEntityID(aggregate.id),
 		)
 
 		if (!aggregateFound) {
-			this.markedAggregates.push(aggregate)
+			this.publishers.push(aggregate)
 		}
 	}
 
-	private static dispatchAggregateEvents(aggregate: AggregateRoot<any>) {
-		aggregate.domainEvents.forEach((event: DomainEvent) => this.dispatch(event))
-	}
-
-	private static removeAggregateFromMarkedDispatchList(
-		aggregate: AggregateRoot<any>,
-	) {
-		const index = this.markedAggregates.findIndex((a) => a.equals(aggregate))
-
-		this.markedAggregates.splice(index, 1)
-	}
-
-	private static findMarkedAggregateByID(
-		entityId: UniqueEntityID,
-	): AggregateRoot<any> | undefined {
-		return this.markedAggregates.find(
-			(aggregate) => aggregate.id === entityId.id,
+	private static dispatchPublisherEvents(aggregate: AggregateRoot<any>) {
+		aggregate.domainEvents.forEach((event: DomainEvent) =>
+			this.dispatchEvent(event),
 		)
 	}
 
-	public static dispatchEventsForAggregate(id: UniqueEntityID) {
-		const aggregate = this.findMarkedAggregateByID(id)
+	private static removePublisher(aggregate: AggregateRoot<any>) {
+		const index = this.publishers.findIndex((a) => a.equals(aggregate))
 
-		if (aggregate) {
-			this.dispatchAggregateEvents(aggregate)
-			aggregate.clearEvents()
-			this.removeAggregateFromMarkedDispatchList(aggregate)
+		this.publishers.splice(index, 1)
+	}
+
+	private static findPublisherByID(
+		entityId: UniqueEntityID,
+	): AggregateRoot<any> | undefined {
+		return this.publishers.find((aggregate) => aggregate.id === entityId.id)
+	}
+
+	public static dispatchPublisherEventsForAggregate(id: UniqueEntityID) {
+		const publisher = this.findPublisherByID(id)
+
+		if (publisher) {
+			this.dispatchPublisherEvents(publisher)
+			publisher.clearEvents()
+			this.removePublisher(publisher)
 		}
 	}
 
-	public static register(
+	public static registerSubscriber(
 		callback: DomainEventCallback,
 		eventClassName: string,
 	) {
-		const wasEventRegisteredBefore = eventClassName in this.handlersMap
+		const wasEventRegisteredBefore = eventClassName in this.subscribers
 
 		if (!wasEventRegisteredBefore) {
-			this.handlersMap[eventClassName] = []
+			this.subscribers[eventClassName] = []
 		}
 
-		this.handlersMap[eventClassName].push(callback)
+		this.subscribers[eventClassName].push(callback)
 	}
 
-	public static clearHandlers() {
-		this.handlersMap = {}
+	public static clearSubscribers() {
+		this.subscribers = {}
 	}
 
-	public static clearMarkedAggregates() {
-		this.markedAggregates = []
+	public static clearPublishers() {
+		this.publishers = []
 	}
 
-	private static dispatch(event: DomainEvent) {
+	private static dispatchEvent(event: DomainEvent) {
 		const eventClassName: string = event.constructor.name
 
-		const isEventRegistered = eventClassName in this.handlersMap
+		const isEventRegistered = eventClassName in this.subscribers
 
 		if (isEventRegistered) {
-			const handlers = this.handlersMap[eventClassName]
+			const handlers = this.subscribers[eventClassName]
 
 			for (const handler of handlers) {
 				handler(event)
