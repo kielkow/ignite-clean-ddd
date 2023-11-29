@@ -3,6 +3,7 @@ import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { AnswerAttachmentList } from './answer-attachment-list'
+import { AnswerCreatedEvent } from '../events/answer-created-event'
 
 export interface AnswerProps {
 	content: string
@@ -57,6 +58,10 @@ export class Answer extends AggregateRoot<AnswerProps> {
 			},
 			id,
 		)
+
+		const isNew = !id
+		isNew && answer.addDomainEvent(new AnswerCreatedEvent(answer))
+
 		return answer
 	}
 }

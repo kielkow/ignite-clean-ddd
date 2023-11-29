@@ -1,4 +1,5 @@
 import { Success } from '@/core/response-handling'
+import { DomainEvent } from '@/core/events/domain-event'
 
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
@@ -56,7 +57,7 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 				},
 				_createdAt: expect.any(Date),
 				_updatedAt: undefined,
-				_domainEvents: [],
+				_domainEvents: expect.any(Array) as DomainEvent[],
 			},
 			{
 				_uniqueEnityId: {
@@ -74,7 +75,7 @@ describe('FindAnswersByQuestionIDUseCase', () => {
 				},
 				_createdAt: expect.any(Date),
 				_updatedAt: undefined,
-				_domainEvents: [],
+				_domainEvents: expect.any(Array) as DomainEvent[],
 			},
 		])
 	})
