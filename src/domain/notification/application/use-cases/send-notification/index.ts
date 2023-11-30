@@ -5,13 +5,13 @@ import { Notification } from '@/domain/notification/enterprise/entities/notifica
 
 import { NotificationsRepository } from '../../repositories/notifications-repository'
 
-interface Input {
+export interface Input {
 	recipientId: UniqueEntityID
 	title: string
 	content: string
 }
 
-type Output = ResponseHandling<void, void>
+export type Output = ResponseHandling<void, void>
 
 export class SendNotificationUseCase {
 	constructor(
