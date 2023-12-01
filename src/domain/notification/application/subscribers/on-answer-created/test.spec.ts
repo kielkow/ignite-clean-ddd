@@ -49,7 +49,7 @@ describe('OnAnswerCreated', () => {
 			sendNotificationUseCase,
 		)
 
-		console.info('Subscriber Created:', sut)
+		console.info('Subscriber Created:', sut.constructor.name)
 	})
 
 	it('should be able send notification when answer is created', async () => {
