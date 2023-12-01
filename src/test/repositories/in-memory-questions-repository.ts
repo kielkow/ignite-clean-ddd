@@ -1,3 +1,5 @@
+import { DomainEvents } from '@/core/events/domain-events'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { Question } from '@/domain/forum/enterprise/entities/question'
@@ -37,6 +39,12 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 	async editQuestion(question: Question): Promise<void> {
 		const index = this.questions.findIndex((q) => q.id === question.id)
 		this.questions[index] = question
+
+		if (question.bestAnswerId) {
+			DomainEvents.dispatchPublisherEventsForAggregate(
+				new UniqueEntityID(question.id),
+			)
+		}
 	}
 
 	async listRecentQuestions(params: PaginationParams): Promise<Question[]> {

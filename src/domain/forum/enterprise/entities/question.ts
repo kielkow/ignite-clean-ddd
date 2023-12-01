@@ -6,6 +6,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Slug } from './value-objects/slug'
 import { QuestionAttachmentList } from './question-attachment-list'
+import { QuestionBestAnswerEvent } from '../events/question-best-answer-event'
 
 export interface QuestionProps {
 	title: string
@@ -67,7 +68,14 @@ export class Question extends AggregateRoot<QuestionProps> {
 	}
 
 	set bestAnswerId(value: UniqueEntityID | undefined) {
+		if (this.props.bestAnswerId?.equals(value)) return
+
 		this.props.bestAnswerId = value
+
+		if (value) {
+			this.addDomainEvent(new QuestionBestAnswerEvent(this, value))
+		}
+
 		this.touch()
 	}
 
